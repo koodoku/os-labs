@@ -1,35 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "procrun.h"
 
 int main(int argc, char *argv[]) {
-    /* child process mode */
-    if (argc > 2 && strcmp(argv[1], "--child") == 0)
-        return atoi(argv[2]);
 
-    char *child[] = { argv[0], "--child", "42", NULL };
-    char *const *cmd = (argc > 1) ? argv + 1 : child;
-
+    // Если программа запущена как дочерний процесс (есть хотя бы один аргумент)
+    if (argc > 1)
+    {
+        return atoi(argv[1]);//возвращаем первый аргумент как код завершения
+    }
     proc_t p;
     int code;
 
-    if (proc_start(cmd, &p) != 0) {
+    // argv[0] - путь к самой себе, дальше любое количество аргументов, в конце NULL
+    char *child_argv[] = { argv[0], "555", "hiiiiii", "args", NULL };
+
+    //запуск дочернего
+    if (proc_start(child_argv, &p) != 0) {
         printf("Start error\n");
         return 1;
     }
-    printf("Process started in background, main program keeps running\n");
 
+    printf("Process started in background\n");
+
+    //ожидание завершения
     if (proc_wait(p, &code) != 0) {
         printf("Wait error\n");
         return 1;
     }
+
     printf("Process exited with code %d\n", code);
 
-    if (argc == 1 && code != 42) {
+    //проверка результата
+    if (code == 555) {
+        printf("TEST PASSED\n");
+    } else {
         printf("TEST FAILED\n");
         return 1;
     }
-    if (argc == 1) printf("TEST PASSED\n");
+
     return 0;
 }
