@@ -3,17 +3,14 @@
 #include "procrun.h"
 
 int main(int argc, char *argv[]) {
-
-    // Если программа запущена как дочерний процесс (есть хотя бы один аргумент)
     if (argc > 1)
     {
-        return atoi(argv[1]);//возвращаем первый аргумент как код завершения
+        return atoi(argv[1]);
     }
     proc_t p;
     int code;
 
-    // argv[0] - путь к самой себе, дальше любое количество аргументов, в конце NULL
-    char *child_argv[] = { argv[0], "555", "hiiiiii", "args", NULL };
+    char *child_argv[] = { argv[0], "42", "hiiiiii", "args", NULL };
 
     //запуск дочернего
     if (proc_start(child_argv, &p) != 0) {
@@ -31,8 +28,7 @@ int main(int argc, char *argv[]) {
 
     printf("Process exited with code %d\n", code);
 
-    //проверка результата
-    if (code == 555) {
+    if (code == 42) {
         printf("TEST PASSED\n");
     } else {
         printf("TEST FAILED\n");

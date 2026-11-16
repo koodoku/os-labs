@@ -5,16 +5,16 @@
 #ifdef _WIN32
 
 int proc_start(char *const argv[], proc_t *p) { 
-    char cmd[1024] = "";
+    char cmd[1024] = ""; 
     for (int i = 0; argv[i]; i++) { 
-        if (i) strcat(cmd, " ");
+        if (i) strcat(cmd, " "); 
         strcat(cmd, "\"");
         strcat(cmd, argv[i]);
         strcat(cmd, "\"");
     }
-    STARTUPINFOA si = {0}; 
-    PROCESS_INFORMATION pi = {0};
-    si.cb = sizeof(si);
+    STARTUPINFOA si = {0};  
+    PROCESS_INFORMATION pi = {0}; 
+    si.cb = sizeof(si); 
 
     if (!CreateProcessA(argv[0],cmd,NULL,NULL,FALSE,0,NULL,NULL,&si,&pi)) 
     {
@@ -23,7 +23,7 @@ int proc_start(char *const argv[], proc_t *p) {
 
     CloseHandle(pi.hThread);
 
-    *p = pi.hProcess;
+    *p = pi.hProcess; 
 
     return 0;
 }
@@ -39,9 +39,9 @@ int proc_wait(proc_t p, int *exit_code) {
         return -1;
     }
 
-    CloseHandle(p);
+    CloseHandle(p); 
 
-    *exit_code = (int)code;
+    *exit_code = (int)code; 
 
     return 0;
 }
@@ -64,17 +64,17 @@ int proc_start(char *const argv[], proc_t *p) {
         _exit(127);
     }
 
-    *p = pid;
+    *p = pid; 
     return 0;
 }
 
-int proc_wait(proc_t p, int *exit_code) {
+int proc_wait(proc_t p, int *exit_code) { 
     int status; 
 
-    if (waitpid(p, &status, 0) < 0)
+    if (waitpid(p, &status, 0) < 0) 
         return -1;
 
-    *exit_code = WIFEXITED(status) ? WEXITSTATUS(status) : -1; 
+    *exit_code = WIFEXITED(status) ? WEXITSTATUS(status) : -1;
 
     return 0;
 }
